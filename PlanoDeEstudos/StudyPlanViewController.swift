@@ -34,8 +34,13 @@ class StudyPlanViewController: UIViewController {
         content.body = "Está na hora de estudar \(studyPlan.section)"
         content.categoryIdentifier = "Lembrete" //serve para identificar qual notificação é apresentada, podemos utilizar para colocar funções na notificação
         content.badge = 1
+        //content.sound = UNNotificationSound(named: "meuSom.caf") //o arquivo de som deve estar localmente inserido no app
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false) //dispara a solicitação em x segundos
+        //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false) //dispara a solicitação em x segundos
+        
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: dpDate.date)
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         

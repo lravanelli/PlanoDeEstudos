@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.center.requestAuthorization(options: options, completionHandler: { (success, error) in
                     if error == nil {
                         print(success)
+                        //UIApplication.shared.registerForRemoteNotifications() para push notification
                     } else {
                         print(error!.localizedDescription)
                     }
@@ -69,6 +70,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    
+    //para push notification
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let token = deviceToken.map({String(format: "%02.2hhx", $0)}).joined()
+        print(token)
+        //utilizar nwpusher para testar
+    }
 
 }
 
@@ -83,8 +91,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         switch response.actionIdentifier {
         case "Confirm":
             print("Confirmado o estudo")
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "Confirmed"), object: nil, userInfo: ["id": id])//disparar uma notificição interna
+            
         case "Cancel":
             print("Cancelou")
+            
         case UNNotificationDefaultActionIdentifier:
             print("Usuário tocou na notificação")
         case UNNotificationDismissActionIdentifier:
